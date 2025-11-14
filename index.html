@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>O que é Ficção — Portal de Artigos</title>
+  <meta name="description" content="Artigos, ensaios e guias sobre o conceito de ficção: tipos, história, técnicas e exemplos literários e audiovisuais.">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c3aed; --glass: rgba(255,255,255,0.04);
+      --radius:14px; --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#071129 0%, #081827 60%);color:#e6eef8;margin:0;padding:32px;}
+    .container{max-width:var(--maxw);margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+    h1.site-title{font-size:20px;margin:0}
+    p.tagline{margin:0;color:var(--muted);font-size:13px}
+
+    nav{display:flex;gap:12px;align-items:center}
+    .nav-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:var(--muted);cursor:pointer;font-size:14px}
+    .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .search input{background:transparent;border:0;color:inherit;outline:none;width:220px}
+
+    main{display:grid;grid-template-columns:1fr 340px;gap:24px}
+
+    /* Article cards */
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+    .card h3{margin:0 0 8px 0}
+    .meta{color:var(--muted);font-size:13px}
+    .card p{color:#dbe9ff;margin:0 0 12px 0}
+    .read-btn{align-self:flex-start;background:var(--accent);border:none;padding:8px 12px;border-radius:10px;color:white;cursor:pointer}
+
+    /* Sidebar */
+    aside{position:relative}
+    .panel{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+    .panel h4{margin:0 0 12px 0}
+    .categories{display:flex;flex-wrap:wrap;gap:8px}
+    .cat{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer}
+    .author{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#ffb86b,#ff7ab6);display:flex;align-items:center;justify-content:center;font-weight:700}
+
+    /* Article view overlay */
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.7);display:none;align-items:center;justify-content:center;padding:28px}
+    .overlay.open{display:flex}
+    .modal{background:linear-gradient(180deg,#071126,#081827);max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:26px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
+    .modal h2{margin-top:0}
+    .modal .close{position:sticky;top:12px;float:right;background:transparent;border:0;color:var(--muted);cursor:pointer}
+    .modal article p{line-height:1.7;color:#d7e6ff}
+
+    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* Responsive */
+    @media(max-width:900px){main{grid-template-columns:1fr} .cards{grid-template-columns:1fr} aside{order:2} header{flex-direction:column;align-items:flex-start;gap:8px} .search input{width:140px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">F</div>
+        <div>
+          <h1 class="site-title">O que é Ficção</h1>
+          <p class="tagline">Artigos, ensaios e guias sobre narrativa, literatura e mídia ficcional</p>
+        </div>
+      </div>
+      <nav>
+        <div class="search" role="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"></circle></svg>
+          <input id="search" placeholder="Buscar artigos, ex: romance" />
+        </div>
+        <button class="nav-btn" id="btn-dark">Modo</button>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <h2 style="margin:0">Últimos artigos</h2>
+          <small class="meta" id="count">3 artigos</small>
+        </div>
+
+        <div class="cards" id="cards"></div>
+
+      </section>
+
+      <aside>
+        <div class="panel">
+          <h4>Categorias</h4>
+          <div class="categories" id="categories"></div>
+          <h4 style="margin-top:14px">Sobre o site</h4>
+          <p class="meta">Portal educativo sobre o conceito de ficção: definições, gêneros, técnicas, exemplos clássicos e contemporâneos.</p>
+          <div class="author">
+            <div class="avatar">GC</div>
+            <div>
+              <strong>Gbz — Editor</strong>
+              <div class="meta">Curadoria de textos e resenhas.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <h4>Artigos populares</h4>
+          <ol style="padding-left:18px;color:var(--muted)">
+            <li>O que é ficção literária?</li>
+            <li>Realismo vs Ficção</li>
+            <li>Como criar mundos críveis</li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div>Feito com ♥ — <strong>O que é Ficção</strong> • 2025</div>
+      <div style="margin-top:6px;color:var(--muted)">Use este arquivo como ponto de partida: edite textos, adicione artigos no bloco <code>data.articles</code> do script.</div>
+    </footer>
+  </div>
+
+  <!-- Article overlay -->
+  <div class="overlay" id="overlay" aria-hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <button class="close" id="close">Fechar ✕</button>
+      <div id="articleContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // Dados iniciais: edite, adicione ou conecte a uma API
+    const data = {
+      categories: ['Conceitos','Gêneros','Técnicas','História','Mídia'],
+      articles: [
+        {
+          id:1,
+          title:'O que é ficção? Uma definição clara',
+          excerpt:'Ficção é a criação de narrativas e mundos que não são literais à realidade — mesmo quando inspirados nela. Entenda diferenças e nuances.',
+          category:'Conceitos',
+          author:'Gbz',
+          date:'2025-11-13',
+          content:`<article>
+            <h2>O que é ficção?</h2>
+            <p>Ficção é um termo amplo para obras que representam eventos, pessoas ou mundos imaginários. Inclui romances, contos, filmes, séries, quadrinhos e games. Ao contrário do texto factual, a ficção prioriza verossimilhança narrativa e intenção artística.</p>
+            <h3>Principais elementos</h3>
+            <ul>
+              <li><strong>Enredo:</strong> sequência de acontecimentos.</li>
+              <li><strong>Personagens:</strong> agentes que movem a história.</li>
+              <li><strong>Ambientação:</strong> o mundo onde a narrativa ocorre.</li>
+              <li><strong>Tema:</strong> ideias centrais exploradas.</li>
+            </ul>
+            <p>Ficção pode ser realista ou fantástica; a distinção está na relação com o mundo empírico e nas regras internas da obra.</p>
+          </article>`
+        },
+        {
+          id:2,
+          title:'Gêneros da ficção: do realismo ao fantástico',
+          excerpt:'Breve panorama dos principais gêneros ficcionais e como eles dialogam com expectativas do leitor e convenções narrativas.',
+          category:'Gêneros',
+          author:'Gbz',
+          date:'2024-09-02',
+          content:`<article>
+            <h2>Gêneros da ficção</h2>
+            <p>Os gêneros ajudam a enquadrar expectativas: romance, ficção científica, fantasia, mistério, horror, entre outros. Cada gênero possui convenções que autores podem seguir ou subverter.</p>
+            <h3>Exemplos</h3>
+            <ul>
+              <li><strong>Ficção científica:</strong> especulação tecnológica.</li>
+              <li><strong>Fantasia:</strong> presença de elementos impossíveis no nosso mundo.</li>
+              <li><strong>Romance social:</strong> foco em relações e crítica social.</li>
+            </ul>
+          </article>`
+        },
+        {
+          id:3,
+          title:'Como a ficção ajuda a entender a realidade',
+          excerpt:'Ficção é uma lente: através dela exploramos emoções, contextos sociais e possibilidades contrafactuais que iluminam aspectos da vida real.',
+          category:'Conceitos',
+          author:'Gbz',
+          date:'2023-02-18',
+          content:`<article>
+            <h2>Ficção como ferramenta de conhecimento</h2>
+            <p>Mesmo sendo "não-factual", a ficção pode aumentar empatia, testar hipóteses sociais e oferecer críticas. Obras ficcionais frequentemente ajudam a transportar experiências que leitores não viveriam de outra forma.</p>
+            <h3>Aplicações</h3>
+            <ol>
+              <li>Educação: estudos de caso fictícios.</li>
+              <li>Treinamento: simulações narrativas.</li>
+              <li>Cultura: preservação e debate de valores.</li>
+            </ol>
+          </article>`
+        }
+      ]
+    };
+
+    const cardsEl = document.getElementById('cards');
+    const categoriesEl = document.getElementById('categories');
+    const countEl = document.getElementById('count');
+
+    function renderCategories(){
+      categoriesEl.innerHTML = '';
+      data.categories.forEach(c=>{
+        const b=document.createElement('button');b.className='cat';b.textContent=c;b.onclick=()=>filterByCategory(c);
+        categoriesEl.appendChild(b);
+      })
+    }
+
+    function renderCards(list){
+      cardsEl.innerHTML='';
+      list.forEach(a=>{
+        const card=document.createElement('article');card.className='card';
+        card.innerHTML=`<div><h3>${a.title}</h3><div class="meta">${a.author} • ${a.date} • ${a.category}</div><p>${a.excerpt}</p></div><div><button class="read-btn" data-id="${a.id}">Ler</button></div>`;
+        cardsEl.appendChild(card);
+      });
+      // update count
+      countEl.textContent = list.length + (list.length===1? ' artigo' : ' artigos');
+      // attach listeners
+      document.querySelectorAll('.read-btn').forEach(b=>b.addEventListener('click',e=>openArticle(e.target.dataset.id)));
+    }
+
+    function openArticle(id){
+      const art = data.articles.find(x=>x.id==id);
+      if(!art) return;
+      document.getElementById('articleContent').innerHTML = `<header><h2>${art.title}</h2><div class="meta">${art.author} • ${art.date} • ${art.category}</div></header>${art.content}`;
+      document.getElementById('overlay').classList.add('open');
+      document.getElementById('overlay').setAttribute('aria-hidden','false');
+    }
+
+    document.getElementById('close').addEventListener('click', ()=>{
+      document.getElementById('overlay').classList.remove('open');
+      document.getElementById('overlay').setAttribute('aria-hidden','true');
+    });
+
+    function filterByCategory(cat){
+      const filtered = data.articles.filter(a=>a.category===cat);
+      renderCards(filtered);
+    }
+
+    // Search
+    document.getElementById('search').addEventListener('input', e=>{
+      const q = e.target.value.trim().toLowerCase();
+      if(!q) renderCards(data.articles);
+      else{
+        const filtered = data.articles.filter(a=> (a.title + ' ' + a.excerpt + ' ' + a.content).toLowerCase().includes(q));
+        renderCards(filtered);
+      }
+    });
+
+    // Dark/Light toggle (simple)
+    document.getElementById('btn-dark').addEventListener('click', ()=>{
+      document.documentElement.style.setProperty('--accent', getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() === '#7c3aed' ? '#06b6d4' : '#7c3aed');
+      alert('Modo trocado — personalize cores editando :root no CSS.');
+    });
+
+    // Inicialização
+    renderCategories();
+    renderCards(data.articles);
+  </script>
+</body>
+</html>

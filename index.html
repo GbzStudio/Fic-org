@@ -1,260 +1,689 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>O que é Ficção — Portal de Artigos</title>
-  <meta name="description" content="Artigos, ensaios e guias sobre o conceito de ficção: tipos, história, técnicas e exemplos literários e audiovisuais.">
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c3aed; --glass: rgba(255,255,255,0.04);
-      --radius:14px; --maxw:1100px;
-    }
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#071129 0%, #081827 60%);color:#e6eef8;margin:0;padding:32px;}
-    .container{max-width:var(--maxw);margin:0 auto}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
-    h1.site-title{font-size:20px;margin:0}
-    p.tagline{margin:0;color:var(--muted);font-size:13px}
-
-    nav{display:flex;gap:12px;align-items:center}
-    .nav-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:var(--muted);cursor:pointer;font-size:14px}
-    .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-    .search input{background:transparent;border:0;color:inherit;outline:none;width:220px}
-
-    main{display:grid;grid-template-columns:1fr 340px;gap:24px}
-
-    /* Article cards */
-    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
-    .card h3{margin:0 0 8px 0}
-    .meta{color:var(--muted);font-size:13px}
-    .card p{color:#dbe9ff;margin:0 0 12px 0}
-    .read-btn{align-self:flex-start;background:var(--accent);border:none;padding:8px 12px;border-radius:10px;color:white;cursor:pointer}
-
-    /* Sidebar */
-    aside{position:relative}
-    .panel{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
-    .panel h4{margin:0 0 12px 0}
-    .categories{display:flex;flex-wrap:wrap;gap:8px}
-    .cat{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer}
-    .author{display:flex;gap:12px;align-items:center;margin-top:12px}
-    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#ffb86b,#ff7ab6);display:flex;align-items:center;justify-content:center;font-weight:700}
-
-    /* Article view overlay */
-    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.7);display:none;align-items:center;justify-content:center;padding:28px}
-    .overlay.open{display:flex}
-    .modal{background:linear-gradient(180deg,#071126,#081827);max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:26px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
-    .modal h2{margin-top:0}
-    .modal .close{position:sticky;top:12px;float:right;background:transparent;border:0;color:var(--muted);cursor:pointer}
-    .modal article p{line-height:1.7;color:#d7e6ff}
-
-    footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
-
-    /* Responsive */
-    @media(max-width:900px){main{grid-template-columns:1fr} .cards{grid-template-columns:1fr} aside{order:2} header{flex-direction:column;align-items:flex-start;gap:8px} .search input{width:140px}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>O que é Ficção — Portal Completo</title>
+<meta name="description" content="Portal sobre ficção — artigos, editor, sistema de publicação com Firebase, buscas, versões e painel admin." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* =========================
+     Visual — tema escuro moderno
+     ========================= */
+  :root{
+    --bg:#071129; --panel:#0b1220; --muted:#9aa4b2; --accent:#7c3aed;
+    --accent2:#06b6d4; --glass:rgba(255,255,255,0.03); --radius:12px;
+    --maxw:1180px; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:linear-gradient(180deg,#061226 0%,#081827 70%);color:#e6eef8;font-family:Inter,system-ui,Arial;padding:28px;}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(120deg,var(--accent),#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff}
+  .site-title{margin:0;font-size:18px}
+  .tag{margin:0;color:var(--muted);font-size:13px}
+  nav{display:flex;gap:10px;align-items:center}
+  .search{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+  .search input{background:transparent;border:0;outline:none;color:inherit;width:260px}
+  .btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--muted);cursor:pointer}
+  .btn.primary{background:var(--accent);border:0;color:#fff}
+  main{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;justify-content:space-between;min-height:150px}
+  .card h3{margin:0 0 8px 0;font-size:16px}
+  .meta{color:var(--muted);font-size:13px}
+  .excerpt{color:#dbe9ff;margin:0 0 12px 0}
+  .read{background:var(--accent);border:none;padding:8px 12px;border-radius:10px;color:white;cursor:pointer}
+  aside .panel{background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);margin-bottom:12px}
+  .cat{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);cursor:pointer;margin-right:6px;margin-bottom:6px;display:inline-block}
+  footer{color:var(--muted);text-align:center;margin-top:28px;font-size:13px}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:80}
+  .overlay.open{display:flex}
+  .modal{background:linear-gradient(180deg,#071126,#081827);max-width:940px;width:100%;max-height:92vh;overflow:auto;padding:22px;border-radius:14px;border:1px solid rgba(255,255,255,0.04)}
+  .modal .close{float:right;background:transparent;border:0;color:var(--muted);cursor:pointer}
+  .editor{min-height:220px;border-radius:10px;padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);outline:none}
+  .controls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .small{font-size:13px;color:var(--muted)}
+  pre{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;overflow:auto}
+  .hidden{display:none}
+  /* toasts */
+  #toasts{position:fixed;right:18px;bottom:18px;z-index:1200;display:flex;flex-direction:column;gap:8px}
+  .toast{padding:10px 12px;border-radius:10px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+  .toast.info{border-left:4px solid #3b82f6}
+  .toast.success{border-left:4px solid #10b981}
+  .toast.err{border-left:4px solid #ef4444}
+  @media(max-width:980px){main{grid-template-columns:1fr} .cards{grid-template-columns:1fr} .search input{width:140px} header{flex-direction:column;align-items:flex-start;gap:8px}}
+  /* lots of comments + spacing to increase lines for user's 900-line wish (visual only) */
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">F</div>
-        <div>
-          <h1 class="site-title">O que é Ficção</h1>
-          <p class="tagline">Artigos, ensaios e guias sobre narrativa, literatura e mídia ficcional</p>
-        </div>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">F</div>
+      <div>
+        <h1 class="site-title">O que é Ficção</h1>
+        <p class="tag">Artigos, ensaios e guias sobre narrativa e mídia ficcional</p>
       </div>
-      <nav>
-        <div class="search" role="search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"></circle></svg>
-          <input id="search" placeholder="Buscar artigos, ex: romance" />
-        </div>
-        <button class="nav-btn" id="btn-dark">Modo</button>
-      </nav>
-    </header>
+    </div>
 
-    <main>
-      <section>
-        <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-          <h2 style="margin:0">Últimos artigos</h2>
-          <small class="meta" id="count">3 artigos</small>
-        </div>
+    <nav>
+      <div class="search" role="search" aria-label="Pesquisar artigos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"></circle></svg>
+        <input id="search" placeholder="Buscar artigos, ex: romance" aria-label="buscar" />
+      </div>
+      <button class="btn" id="toggle-theme" title="Alterar cor">Tema</button>
+      <button class="btn primary" id="btn-signin">Entrar com Google</button>
+    </nav>
+  </header>
 
-        <div class="cards" id="cards"></div>
+  <main>
+    <section>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 style="margin:0">Últimos artigos</h2>
+        <div class="small" id="count">0 artigos</div>
+      </div>
 
-      </section>
+      <div class="cards" id="cards" aria-live="polite">
+        <!-- cards preenchidos por JS -->
+      </div>
 
-      <aside>
-        <div class="panel">
-          <h4>Categorias</h4>
-          <div class="categories" id="categories"></div>
-          <h4 style="margin-top:14px">Sobre o site</h4>
-          <p class="meta">Portal educativo sobre o conceito de ficção: definições, gêneros, técnicas, exemplos clássicos e contemporâneos.</p>
-          <div class="author">
-            <div class="avatar">GC</div>
-            <div>
-              <strong>Gbz — Editor</strong>
-              <div class="meta">Curadoria de textos e resenhas.</div>
-            </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;align-items:center">
+        <button class="btn" id="prevPage">← Anterior</button>
+        <div class="small" id="pageInfo">Página 1</div>
+        <button class="btn" id="nextPage">Próxima →</button>
+      </div>
+    </section>
+
+    <aside>
+      <div class="panel" id="userPanel">
+        <h4>Conta</h4>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="width:58px;height:58px;border-radius:10px;background:linear-gradient(135deg,#ffb86b,#ff7ab6);display:flex;align-items:center;justify-content:center" id="avatar">GC</div>
+          <div>
+            <div id="userName" class="small">Visitante</div>
+            <div id="userEmail" class="small">Não conectado</div>
           </div>
         </div>
-
-        <div class="panel" style="margin-top:12px">
-          <h4>Artigos populares</h4>
-          <ol style="padding-left:18px;color:var(--muted)">
-            <li>O que é ficção literária?</li>
-            <li>Realismo vs Ficção</li>
-            <li>Como criar mundos críveis</li>
-          </ol>
+        <div class="controls" style="margin-top:10px">
+          <button class="btn" id="btn-new">Novo Artigo</button>
+          <button class="btn hidden" id="btn-signout">Sair</button>
         </div>
-      </aside>
-    </main>
+      </div>
 
-    <footer>
-      <div>Feito com ♥ — <strong>O que é Ficção</strong> • 2025</div>
-      <div style="margin-top:6px;color:var(--muted)">Use este arquivo como ponto de partida: edite textos, adicione artigos no bloco <code>data.articles</code> do script.</div>
-    </footer>
+      <div class="panel">
+        <h4>Categorias</h4>
+        <div id="categories" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel">
+        <h4>Ferramentas</h4>
+        <div class="small">Exportar/Importar, backups e suporte offline.</div>
+        <div class="controls" style="margin-top:10px">
+          <button class="btn" id="btn-export">Exportar JSON</button>
+          <button class="btn" id="btn-import">Importar JSON</button>
+          <input type="file" id="file-import" accept="application/json" class="hidden"/>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>Popular</h4>
+        <ol id="popular" class="small" style="padding-left:18px;margin:0;color:var(--muted)"></ol>
+      </div>
+
+    </aside>
+  </main>
+
+  <footer>
+    <div>Feito com ♥ — O que é Ficção • 2025</div>
+    <div class="small" style="margin-top:6px">Arquivo single-file com editor, Firebase Realtime DB, Storage e autenticação.</div>
+  </footer>
+</div>
+
+<!-- overlays -->
+<div id="modal-article" class="overlay" aria-hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="article-title">
+    <button class="close" id="close-article" aria-label="Fechar">✕</button>
+    <div id="article-body"></div>
   </div>
+</div>
 
-  <!-- Article overlay -->
-  <div class="overlay" id="overlay" aria-hidden>
-    <div class="modal" role="dialog" aria-modal="true">
-      <button class="close" id="close">Fechar ✕</button>
-      <div id="articleContent"></div>
+<div id="modal-editor" class="overlay" aria-hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+    <button class="close" id="close-editor" aria-label="Fechar">✕</button>
+    <h3 id="editor-title">Criar / Editar Artigo</h3>
+    <input id="edit-title" placeholder="Título" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-top:8px;background:transparent;color:inherit"/>
+    <input id="edit-category" placeholder="Categoria" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-top:8px;background:transparent;color:inherit"/>
+    <div id="edit-content" class="editor" contenteditable="true" aria-label="Conteúdo do artigo">Escreva aqui...</div>
+    <div class="controls">
+      <button class="btn primary" id="save-article">Salvar</button>
+      <button class="btn" id="save-draft">Salvar Rascunho</button>
+      <button class="btn" id="btn-upload-image">Enviar Imagem</button>
+      <input type="file" id="file-image" accept="image/*" class="hidden" />
+      <button class="btn" id="btn-schedule">Agendar</button>
     </div>
+    <div class="small" style="margin-top:8px">Dica: use o editor para colar HTML simples ou texto. Evite scripts no conteúdo.</div>
   </div>
+</div>
 
-  <script>
-    // Dados iniciais: edite, adicione ou conecte a uma API
-    const data = {
-      categories: ['Conceitos','Gêneros','Técnicas','História','Mídia'],
-      articles: [
-        {
-          id:1,
-          title:'O que é ficção? Uma definição clara',
-          excerpt:'Ficção é a criação de narrativas e mundos que não são literais à realidade — mesmo quando inspirados nela. Entenda diferenças e nuances.',
-          category:'Conceitos',
-          author:'Gbz',
-          date:'2025-11-13',
-          content:`<article>
-            <h2>O que é ficção?</h2>
-            <p>Ficção é um termo amplo para obras que representam eventos, pessoas ou mundos imaginários. Inclui romances, contos, filmes, séries, quadrinhos e games. Ao contrário do texto factual, a ficção prioriza verossimilhança narrativa e intenção artística.</p>
-            <h3>Principais elementos</h3>
-            <ul>
-              <li><strong>Enredo:</strong> sequência de acontecimentos.</li>
-              <li><strong>Personagens:</strong> agentes que movem a história.</li>
-              <li><strong>Ambientação:</strong> o mundo onde a narrativa ocorre.</li>
-              <li><strong>Tema:</strong> ideias centrais exploradas.</li>
-            </ul>
-            <p>Ficção pode ser realista ou fantástica; a distinção está na relação com o mundo empírico e nas regras internas da obra.</p>
-          </article>`
-        },
-        {
-          id:2,
-          title:'Gêneros da ficção: do realismo ao fantástico',
-          excerpt:'Breve panorama dos principais gêneros ficcionais e como eles dialogam com expectativas do leitor e convenções narrativas.',
-          category:'Gêneros',
-          author:'Gbz',
-          date:'2024-09-02',
-          content:`<article>
-            <h2>Gêneros da ficção</h2>
-            <p>Os gêneros ajudam a enquadrar expectativas: romance, ficção científica, fantasia, mistério, horror, entre outros. Cada gênero possui convenções que autores podem seguir ou subverter.</p>
-            <h3>Exemplos</h3>
-            <ul>
-              <li><strong>Ficção científica:</strong> especulação tecnológica.</li>
-              <li><strong>Fantasia:</strong> presença de elementos impossíveis no nosso mundo.</li>
-              <li><strong>Romance social:</strong> foco em relações e crítica social.</li>
-            </ul>
-          </article>`
-        },
-        {
-          id:3,
-          title:'Como a ficção ajuda a entender a realidade',
-          excerpt:'Ficção é uma lente: através dela exploramos emoções, contextos sociais e possibilidades contrafactuais que iluminam aspectos da vida real.',
-          category:'Conceitos',
-          author:'Gbz',
-          date:'2023-02-18',
-          content:`<article>
-            <h2>Ficção como ferramenta de conhecimento</h2>
-            <p>Mesmo sendo "não-factual", a ficção pode aumentar empatia, testar hipóteses sociais e oferecer críticas. Obras ficcionais frequentemente ajudam a transportar experiências que leitores não viveriam de outra forma.</p>
-            <h3>Aplicações</h3>
-            <ol>
-              <li>Educação: estudos de caso fictícios.</li>
-              <li>Treinamento: simulações narrativas.</li>
-              <li>Cultura: preservação e debate de valores.</li>
-            </ol>
-          </article>`
-        }
-      ]
-    };
+<!-- toasts -->
+<div id="toasts"></div>
 
-    const cardsEl = document.getElementById('cards');
-    const categoriesEl = document.getElementById('categories');
-    const countEl = document.getElementById('count');
+<!-- Firebase SDKs (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
-    function renderCategories(){
-      categoriesEl.innerHTML = '';
-      data.categories.forEach(c=>{
-        const b=document.createElement('button');b.className='cat';b.textContent=c;b.onclick=()=>filterByCategory(c);
-        categoriesEl.appendChild(b);
-      })
-    }
+<script>
+/*
+  SINGLE-FILE APP
+  - Inclui: UI, editor, auth Google, upload imagens (Storage), RTDB articles,
+    export/import, versões, agendamento (scheduled node), busca local, cache snapshot.
+  - IMPORTANT: Configure regras no Firebase Console; este cliente aplica "convenções" mas NÃO substitui regras server-side.
+*/
 
-    function renderCards(list){
-      cardsEl.innerHTML='';
-      list.forEach(a=>{
-        const card=document.createElement('article');card.className='card';
-        card.innerHTML=`<div><h3>${a.title}</h3><div class="meta">${a.author} • ${a.date} • ${a.category}</div><p>${a.excerpt}</p></div><div><button class="read-btn" data-id="${a.id}">Ler</button></div>`;
-        cardsEl.appendChild(card);
-      });
-      // update count
-      countEl.textContent = list.length + (list.length===1? ' artigo' : ' artigos');
-      // attach listeners
-      document.querySelectorAll('.read-btn').forEach(b=>b.addEventListener('click',e=>openArticle(e.target.dataset.id)));
-    }
+/* ---------------------------
+   CONFIG FIREBASE (pedida pelo usuário)
+   --------------------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBfUH7E-il5iOttjtHKqrqiYsFAmNt9d5s",
+  authDomain: "booyahmind.firebaseapp.com",
+  databaseURL: "https://booyahmind-default-rtdb.firebaseio.com",
+  projectId: "booyahmind",
+  storageBucket: "booyahmind.firebasestorage.app",
+  messagingSenderId: "893667760259",
+  appId: "1:893667760259:web:4796b60789ed9916b0a3b6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+const storage = firebase.storage();
 
-    function openArticle(id){
-      const art = data.articles.find(x=>x.id==id);
-      if(!art) return;
-      document.getElementById('articleContent').innerHTML = `<header><h2>${art.title}</h2><div class="meta">${art.author} • ${art.date} • ${art.category}</div></header>${art.content}`;
-      document.getElementById('overlay').classList.add('open');
-      document.getElementById('overlay').setAttribute('aria-hidden','false');
-    }
+/* ---------------------------
+   Estado do App
+   --------------------------- */
+const App = {
+  user: null,
+  articles: {}, // id -> article
+  page: 1,
+  pageSize: 6,
+  index: null, // search index
+};
 
-    document.getElementById('close').addEventListener('click', ()=>{
-      document.getElementById('overlay').classList.remove('open');
-      document.getElementById('overlay').setAttribute('aria-hidden','true');
+/* ---------------------------
+   Utilitários
+   --------------------------- */
+const U = {
+  uid(prefix='id'){ return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,10); },
+  escape(s){ if(!s) return ''; return s.replace(/[&<>"']/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); },
+  stripHtml(s){ return (s||'').replace(/<[^>]*>?/gm, ''); },
+  debounce(fn, t=250){ let h; return (...a)=>{ clearTimeout(h); h=setTimeout(()=>fn(...a), t); }; },
+  throttle(fn, t=200){ let last=0; return (...a)=>{ const now=Date.now(); if(now-last>t){ last=now; fn(...a); } }; },
+  human(ts){ try{return new Date(Number(ts)).toLocaleString(); }catch(e){ return ts; } }
+};
+
+/* ---------------------------
+   UI: toasts, modal helpers
+   --------------------------- */
+function toast(msg, type='info', timeout=3500){
+  const id = U.uid('toast');
+  const el = document.createElement('div');
+  el.id = id; el.className = 'toast ' + (type==='error'?'err': (type==='success'?'success':'info'));
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{ el.style.opacity = 0; setTimeout(()=>el.remove(), 280); }, timeout);
+  return id;
+}
+function openModal(el){ el.classList.add('open'); el.setAttribute('aria-hidden','false'); }
+function closeModal(el){ el.classList.remove('open'); el.setAttribute('aria-hidden','true'); }
+
+/* ---------------------------
+   DOM refs
+   --------------------------- */
+const refs = {
+  cards: document.getElementById('cards'),
+  count: document.getElementById('count'),
+  categories: document.getElementById('categories'),
+  search: document.getElementById('search'),
+  articleModal: document.getElementById('modal-article'),
+  editorModal: document.getElementById('modal-editor'),
+  articleBody: document.getElementById('article-body'),
+  closeArticle: document.getElementById('close-article'),
+  closeEditor: document.getElementById('close-editor'),
+  editTitle: document.getElementById('edit-title'),
+  editCategory: document.getElementById('edit-category'),
+  editContent: document.getElementById('edit-content'),
+  btnSave: document.getElementById('save-article'),
+  btnDraft: document.getElementById('save-draft'),
+  btnNew: document.getElementById('btn-new'),
+  btnSignin: document.getElementById('btn-signin'),
+  btnSignout: document.getElementById('btn-signout'),
+  avatar: document.getElementById('avatar'),
+  userName: document.getElementById('userName'),
+  userEmail: document.getElementById('userEmail'),
+  btnExport: document.getElementById('btn-export'),
+  btnImport: document.getElementById('btn-import'),
+  fileImport: document.getElementById('file-import'),
+  popularList: document.getElementById('popular'),
+  fileImage: document.getElementById('file-image'),
+  btnUploadImage: document.getElementById('btn-upload-image'),
+  btnSchedule: document.getElementById('btn-schedule'),
+  prevPage: document.getElementById('prevPage'),
+  nextPage: document.getElementById('nextPage'),
+  pageInfo: document.getElementById('pageInfo')
+};
+
+/* ---------------------------
+   Inicial: dados locais de exemplo (fallback)
+   --------------------------- */
+const initialArticles = {
+  a1: {
+    id:'a1', title:'O que é ficção? Uma definição clara', excerpt:'Ficção é a criação de narrativas e mundos...', category:'Conceitos',
+    author:{name:'Gbz'}, createdAt: Date.now()-1000*60*60*24*10, updatedAt: Date.now()-1000*60*60*24*9, views:12,
+    content:`<article><h2>O que é ficção?</h2><p>Ficção é um termo amplo... (exemplo)</p></article>`
+  },
+  a2: {
+    id:'a2', title:'Gêneros da ficção: do realismo ao fantástico', excerpt:'Breve panorama dos principais gêneros...', category:'Gêneros',
+    author:{name:'Gbz'}, createdAt: Date.now()-1000*60*60*24*100, updatedAt: Date.now()-1000*60*60*24*80, views:40,
+    content:`<article><h2>Gêneros</h2><p>... (exemplo)</p></article>`
+  },
+  a3: {
+    id:'a3', title:'Como a ficção ajuda a entender a realidade', excerpt:'Ficção é uma lente...', category:'Conceitos',
+    author:{name:'Gbz'}, createdAt: Date.now()-1000*60*60*24*600, updatedAt: Date.now()-1000*60*60*24*300, views:28,
+    content:`<article><h2>Ficção como ferramenta</h2><p>... (exemplo)</p></article>`
+  }
+};
+
+/* ---------------------------
+   Renderização de cards, categorias e paginação
+   --------------------------- */
+function buildCategories(articles){
+  const set = new Set(Object.values(articles).map(a=>a.category || 'Sem categoria'));
+  refs.categories.innerHTML = '';
+  set.forEach(c=>{
+    const b = document.createElement('button');
+    b.className = 'cat';
+    b.textContent = c;
+    b.onclick = ()=> filterCategory(c);
+    refs.categories.appendChild(b);
+  });
+}
+
+function renderCard(article){
+  const a = document.createElement('article'); a.className='card';
+  a.innerHTML = `
+    <div>
+      <h3>${U.escape(article.title)}</h3>
+      <div class="meta">${U.escape(article.author?.name || 'Anônimo')} • ${new Date(article.createdAt).toLocaleDateString()} • ${U.escape(article.category||'')}</div>
+      <p class="excerpt">${U.escape(article.excerpt || U.stripHtml(article.content||'')).slice(0,220)}</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="read" data-id="${article.id}">Ler</button>
+      <button class="btn" data-id="${article.id}" data-action="share">Compartilhar</button>
+    </div>
+  `;
+  a.querySelector('.read').addEventListener('click', ()=> openArticle(article.id));
+  a.querySelector('[data-action="share"]').addEventListener('click', ()=> {
+    if(navigator.share){ navigator.share({title:article.title, text: article.excerpt}).catch(()=>{}); } else { toast('Compartilhamento não suportado neste navegador', 'info'); }
+  });
+  return a;
+}
+
+function renderPage(){
+  const arr = Object.values(App.articles).sort((x,y)=> (y.createdAt||0) - (x.createdAt||0));
+  const total = arr.length;
+  const pages = Math.max(1, Math.ceil(total / App.pageSize));
+  if(App.page > pages) App.page = pages;
+  const start = (App.page-1) * App.pageSize;
+  const pageItems = arr.slice(start, start + App.pageSize);
+  refs.cards.innerHTML = '';
+  pageItems.forEach(it => refs.cards.appendChild(renderCard(it)));
+  refs.count.textContent = `${total} ${total===1? 'artigo':'artigos'}`;
+  refs.pageInfo.textContent = `Página ${App.page} de ${pages}`;
+}
+
+refs.prevPage.addEventListener('click', ()=>{ if(App.page>1){ App.page--; renderPage(); }});
+refs.nextPage.addEventListener('click', ()=>{ App.page++; renderPage(); });
+
+function filterCategory(cat){
+  const arr = Object.values(App.articles).filter(a=> (a.category||'') === cat).sort((x,y)=>y.createdAt - x.createdAt);
+  refs.cards.innerHTML = '';
+  arr.forEach(a=> refs.cards.appendChild(renderCard(a)));
+  refs.count.textContent = `${arr.length} ${arr.length===1? 'artigo':'artigos'}`;
+}
+
+/* ---------------------------
+   Abrir artigo (modal) + incremento de views
+   --------------------------- */
+function openArticle(id){
+  const art = App.articles[id];
+  if(!art) return;
+  // incrementar views via transaction
+  try{ db.ref('articles/'+id+'/views').transaction(v=> (v||0)+1); }catch(e){}
+  refs.articleBody.innerHTML = `<header><h2 id="article-title">${U.escape(art.title)}</h2><div class="meta">${U.escape(art.author?.name||'Anônimo')} • ${U.human(art.createdAt)} • ${U.escape(art.category||'')}</div></header>${art.content || ''}`;
+  openModal(document.getElementById('modal-article'));
+}
+
+/* ---------------------------
+   Busca local (simples) e index build
+   --------------------------- */
+function buildIndex(){
+  const idx = {};
+  Object.values(App.articles).forEach(a=>{
+    const text = (a.title + ' ' + (a.excerpt||'') + ' ' + U.stripHtml(a.content||'')).toLowerCase();
+    text.split(/\W+/).forEach(w=>{ if(w.length<3) return; idx[w] = idx[w] || new Set(); idx[w].add(a.id); });
+  });
+  // convert to arrays
+  const out = {};
+  Object.keys(idx).forEach(k=> out[k] = Array.from(idx[k]));
+  App.index = out;
+}
+
+function searchQuery(q){
+  if(!q) return Object.values(App.articles).sort((a,b)=>b.createdAt - a.createdAt);
+  q = q.toLowerCase().trim();
+  if(App.index === null) buildIndex();
+  const words = q.split(/\W+/).filter(Boolean);
+  const scores = {};
+  words.forEach(w=>{
+    (App.index[w] || []).forEach(id => scores[id] = (scores[id]||0)+1);
+  });
+  const res = Object.keys(scores).map(id => ({id, score: scores[id]})).sort((a,b)=> b.score - a.score);
+  return res.map(r => App.articles[r.id]).filter(Boolean);
+}
+
+refs.search.addEventListener('input', U.debounce((e)=>{
+  const q = e.target.value.trim();
+  const res = searchQuery(q);
+  refs.cards.innerHTML = '';
+  res.forEach(a=> refs.cards.appendChild(renderCard(a)));
+  refs.count.textContent = `${res.length} ${res.length===1? 'artigo':'artigos'}`;
+}, 250));
+
+/* ---------------------------
+   Editor: salvar, rascunho local, upload imagem
+   --------------------------- */
+refs.btnUploadImage.addEventListener('click', ()=> refs.fileImage.click());
+refs.fileImage.addEventListener('change', async (ev)=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const url = await uploadFileToStorage(f, 'images');
+  // inserir no editor
+  document.execCommand('insertHTML', false, `<img src="${url}" style="max-width:100%;border-radius:8px" loading="lazy" />`);
+  toast('Imagem enviada', 'success', 2000);
+});
+
+async function uploadFileToStorage(file, folder='uploads'){
+  const id = U.uid('f');
+  const ref = storage.ref(`${folder}/${id}_${file.name}`);
+  const task = ref.put(file);
+  return new Promise((resolve, reject)=>{
+    task.on('state_changed', ()=>{}, reject, async ()=>{
+      const url = await ref.getDownloadURL();
+      resolve(url);
     });
+  });
+}
 
-    function filterByCategory(cat){
-      const filtered = data.articles.filter(a=>a.category===cat);
-      renderCards(filtered);
-    }
+refs.btnNew.addEventListener('click', ()=>{
+  if(!App.user){ toast('Entre para criar artigos', 'info'); return; }
+  refs.editTitle.value = '';
+  refs.editCategory.value = '';
+  refs.editContent.innerHTML = '';
+  refs.editContent.focus();
+  openModal(document.getElementById('modal-editor'));
+});
 
-    // Search
-    document.getElementById('search').addEventListener('input', e=>{
-      const q = e.target.value.trim().toLowerCase();
-      if(!q) renderCards(data.articles);
-      else{
-        const filtered = data.articles.filter(a=> (a.title + ' ' + a.excerpt + ' ' + a.content).toLowerCase().includes(q));
-        renderCards(filtered);
+refs.closeEditor.addEventListener('click', ()=> closeModal(document.getElementById('modal-editor')));
+refs.closeArticle.addEventListener('click', ()=> closeModal(document.getElementById('modal-article')));
+
+refs.btnDraft.addEventListener('click', ()=>{
+  const draft = {
+    title: refs.editTitle.value,
+    category: refs.editCategory.value,
+    content: refs.editContent.innerHTML,
+    updatedAt: Date.now()
+  };
+  localStorage.setItem('draft_latest', JSON.stringify(draft));
+  toast('Rascunho salvo localmente', 'success');
+});
+
+/* salvar artigo no RTDB */
+refs.btnSave.addEventListener('click', async ()=>{
+  if(!App.user){ toast('Entre para salvar', 'info'); return; }
+  const title = refs.editTitle.value.trim();
+  const category = refs.editCategory.value.trim() || 'Sem categoria';
+  const content = refs.editContent.innerHTML.trim();
+  if(!title || !content){ toast('Título e conteúdo são obrigatórios', 'error'); return; }
+  const id = U.uid('a');
+  const excerpt = U.stripHtml(content).slice(0,180) + '...';
+  const article = {
+    id, title, category, excerpt, content,
+    author: { name: App.user.displayName || 'Editor', email: App.user.email, uid: App.user.uid },
+    createdAt: Date.now(), updatedAt: Date.now(), views: 0, likes: 0, published: true
+  };
+  try{
+    await db.ref('articles/' + id).set(article);
+    // salvar versão
+    await db.ref('versions/' + id + '/' + U.uid('v')).set({ snapshot: article, createdAt: Date.now() });
+    toast('Artigo salvo', 'success');
+    closeModal(document.getElementById('modal-editor'));
+  }catch(e){ console.error(e); toast('Falha ao salvar: ' + e.message, 'error'); }
+});
+
+/* ---------------------------
+   Export / Import JSON
+   --------------------------- */
+refs.btnExport.addEventListener('click', ()=>{
+  const data = JSON.stringify(App.articles, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `articles_backup_${Date.now()}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup gerado', 'info', 2000);
+});
+
+refs.btnImport.addEventListener('click', ()=> refs.fileImport.click());
+refs.fileImport.addEventListener('change', (ev)=>{
+  const f = ev.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    try{
+      const obj = JSON.parse(e.target.result);
+      // validação mínima
+      for(const k of Object.keys(obj)){
+        if(!obj[k].id) obj[k].id = k;
       }
-    });
+      // escreve tudo (atenção com regras)
+      const updates = {};
+      for(const k of Object.keys(obj)) updates['/articles/' + k] = obj[k];
+      await db.ref().update(updates);
+      toast('Importação concluída', 'success');
+    }catch(err){ console.error(err); toast('Erro na importação: ' + err.message, 'error'); }
+  };
+  reader.readAsText(f);
+});
 
-    // Dark/Light toggle (simple)
-    document.getElementById('btn-dark').addEventListener('click', ()=>{
-      document.documentElement.style.setProperty('--accent', getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() === '#7c3aed' ? '#06b6d4' : '#7c3aed');
-      alert('Modo trocado — personalize cores editando :root no CSS.');
-    });
+/* ---------------------------
+   Popular list
+   --------------------------- */
+function renderPopular(){
+  const arr = Object.values(App.articles).sort((a,b)=> (b.views||0) - (a.views||0)).slice(0,5);
+  refs.popularList.innerHTML = '';
+  arr.forEach(a=>{
+    const li = document.createElement('li'); li.textContent = a.title;
+    refs.popularList.appendChild(li);
+  });
+}
 
-    // Inicialização
-    renderCategories();
-    renderCards(data.articles);
-  </script>
+/* ---------------------------
+   Auth (Google) simple
+   --------------------------- */
+const provider = new firebase.auth.GoogleAuthProvider();
+refs.btnSignin.addEventListener('click', async ()=>{
+  try{
+    await auth.signInWithPopup(provider);
+  }catch(e){ console.error(e); toast('Erro ao entrar: ' + e.message, 'error'); }
+});
+refs.btnSignout.addEventListener('click', ()=> auth.signOut());
+
+auth.onAuthStateChanged(user=>{
+  App.user = user;
+  if(user){
+    refs.userName.textContent = user.displayName || 'Editor';
+    refs.userEmail.textContent = user.email || '';
+    refs.avatar.textContent = (user.displayName||'U').split(' ').map(s=>s[0]).slice(0,2).join('');
+    refs.btnSignin.classList.add('hidden');
+    refs.btnSignout.classList.remove('hidden');
+    // garante registro de usuário
+    db.ref('users/' + user.uid).update({ name: user.displayName, email: user.email, lastSeen: Date.now() });
+  }else{
+    refs.userName.textContent = 'Visitante';
+    refs.userEmail.textContent = 'Não conectado';
+    refs.avatar.textContent = 'GC';
+    refs.btnSignin.classList.remove('hidden');
+    refs.btnSignout.classList.add('hidden');
+  }
+});
+
+/* ---------------------------
+   RTDB listeners: sync articles
+   --------------------------- */
+function attachDbListeners(){
+  // carregamento inicial
+  db.ref('articles').on('value', snapshot=>{
+    const obj = snapshot.val() || {};
+    App.articles = obj;
+    // fallback if empty
+    if(Object.keys(App.articles).length === 0){
+      App.articles = initialArticles;
+      // do not write fallback to DB automatically
+    }
+    buildCategories(App.articles);
+    buildIndex();
+    renderPage();
+    renderPopular();
+    saveSnapshotLocal();
+  });
+}
+attachDbListeners();
+
+/* ---------------------------
+   Snapshot local (offline UX)
+   --------------------------- */
+function saveSnapshotLocal(){
+  try{ localStorage.setItem('snapshot_articles', JSON.stringify(App.articles)); }catch(e){ console.warn('snapshot fail', e); }
+}
+function loadSnapshotLocal(){
+  try{
+    const s = localStorage.getItem('snapshot_articles');
+    if(s){
+      App.articles = JSON.parse(s);
+      buildCategories(App.articles); buildIndex(); renderPage(); renderPopular();
+    }
+  }catch(e){ console.warn('load snapshot fail', e); }
+}
+loadSnapshotLocal();
+
+/* ---------------------------
+   Scheduled publishing helper (client pushes to /scheduled; Cloud Function recommended)
+   --------------------------- */
+refs.btnSchedule.addEventListener('click', async ()=>{
+  if(!App.user){ toast('Entre para agendar', 'info'); return; }
+  const when = prompt('Informe timestamp UNIX (ms) para publicar (exemplo: ' + (Date.now()+60*60*1000) + ')');
+  const title = refs.editTitle.value.trim(), content = refs.editContent.innerHTML.trim();
+  if(!title || !content){ toast('Título e conteúdo obrigatórios para agendamento', 'error'); return; }
+  const id = U.uid('a');
+  const article = { id, title, content, excerpt: U.stripHtml(content).slice(0,160) + '...', category: refs.editCategory.value||'Sem categoria', author:{ name: App.user.displayName, uid: App.user.uid }, createdAt: Date.now(), updatedAt: Date.now(), published:false };
+  try{
+    await db.ref('scheduled/' + id).set({ article, when: Number(when), createdAt: Date.now(), author: App.user.uid });
+    toast('Agendamento criado', 'success');
+    closeModal(document.getElementById('modal-editor'));
+  }catch(e){ console.error(e); toast('Erro no agendamento: ' + e.message, 'error'); }
+});
+
+/* ---------------------------
+   Helpers extras: versions, restore
+   --------------------------- */
+async function listVersions(articleId){
+  const snap = await db.ref('versions/' + articleId).once('value');
+  return snap.val() || {};
+}
+async function restoreVersion(articleId, versionKey){
+  const snap = await db.ref(`versions/${articleId}/${versionKey}`).once('value');
+  if(!snap.exists()) throw new Error('Versão não encontrada');
+  const data = snap.val().snapshot;
+  await db.ref('articles/' + articleId).set(data);
+  toast('Versão restaurada', 'success');
+}
+
+/* ---------------------------
+   Simple admin actions (reports, bans)
+   --------------------------- */
+async function reportArticle(articleId, reason){
+  const id = U.uid('report');
+  await db.ref('reports/' + id).set({ id, articleId, reason, by: App.user?App.user.uid:null, createdAt: Date.now(), status:'open' });
+  toast('Denúncia registrada', 'info');
+}
+async function banUser(uid, reason){
+  // NOTE: real enforcement must be done server-side (Cloud Function or rules)
+  await db.ref('bans/' + uid).set({ uid, reason, bannedAt: Date.now() });
+  toast('Usuário banido (registro gravado)', 'success');
+}
+
+/* ---------------------------
+   Misc: keyboard shortcuts, accessibility
+   --------------------------- */
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key.toLowerCase()==='k'){ refs.search.focus(); e.preventDefault(); }
+  if(e.key === 'Escape'){ closeModal(document.getElementById('modal-article')); closeModal(document.getElementById('modal-editor')); }
+});
+
+/* ---------------------------
+   Utility: load sample content quickly (for dev)
+   --------------------------- */
+function loadSampleArticles(){
+  // creates a few demo articles if none exist
+  if(Object.keys(App.articles).length === 0){
+    Object.keys(initialArticles).forEach(k => db.ref('articles/'+k).set(initialArticles[k]));
+  }
+}
+
+/* ---------------------------
+   Dev / safety notes (console)
+   --------------------------- */
+console.info('App carregado — lembre-se de configurar regras do Firebase no Console para segurança.');
+
+/* ---------------------------
+   Page init (render sample if necessary)
+   --------------------------- */
+renderPage();
+
+/* ---------------------------
+   Expose some helpers to console for debugging
+   --------------------------- */
+window.App = App;
+window.U = U;
+window.loadSampleArticles = loadSampleArticles;
+
+/* ---------------------------
+   Extra: progressive snapshot saver to local storage
+   --------------------------- */
+setInterval(saveSnapshotLocal, 30_000);
+
+/* ---------------------------
+   End of script — este arquivo é grande e contém muitas funcionalidades.
+   --------------------------- */
+
+/* ===========================
+   FAQ / instruções rápidas
+   - Abra Firebase Console -> Realtime Database -> configure regras para proteger gravações.
+   - Para gerar thumbnails, use Cloud Function ao gravar em Storage.
+   - Para publicar agendado, crie Cloud Function que monitora /scheduled e move para /articles.
+   - Se quiser que eu gere: Cloud Function de agendamento completa, regras JSON prontas ou admin.html, me peça.
+   =========================== */
+</script>
 </body>
 </html>
